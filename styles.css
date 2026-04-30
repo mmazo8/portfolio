@@ -81,10 +81,9 @@ nav {
 
 .logo-name {
   font-family: 'Anton', sans-serif;
-  font-size: 17px;
+  font-size: 30px;
   letter-spacing: 0.08em;
   color: var(--ink);
-  text-transform: uppercase;
 }
 
 .nav-links {
@@ -102,11 +101,10 @@ nav {
 .nav-links li:nth-child(3) { animation-delay: 0.37s; }
 
 .nav-links a {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 400;
+  font-family: 'Anton', sans-serif;
+  font-size: 20px;
+  font-weight: 900;
   letter-spacing: 0.14em;
-  text-transform: uppercase;
   color: var(--ink);
   text-decoration: none;
   position: relative;
@@ -142,6 +140,9 @@ nav {
   padding: 80px 56px 0;
   align-items: center;
   gap: 40px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 /* LEFT — text */
@@ -163,7 +164,7 @@ nav {
 
 .hero-name {
   font-family: 'Anton', sans-serif;
-  font-size: clamp(60px, 7.5vw, 100px);
+  font-size: clamp(40px, 7.5vw, 30px);
   line-height: 0.93;
   letter-spacing: 0.01em;
   color: var(--ink);
@@ -193,8 +194,8 @@ nav {
 }
 
 .hero-desc {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 15px;
+  font-family: 'Anton', sans-serif;
+  font-size: 20px;
   font-weight: 300;
   line-height: 1.8;
   color: var(--ink);
