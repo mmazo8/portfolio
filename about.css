@@ -5,6 +5,8 @@
   width: 100%;
   margin: 0 auto;
   padding: 0 56px;
+  padding-top: 97px;
+  /* clear fixed nav */
 }
 
 /* ── SCROLL REVEAL ─────────────────────────────────── */
@@ -723,6 +725,8 @@
 body.about-page {
   background: #081F5C;
   color: #f6f4ef;
+  overflow: auto;
+  /* override the global overflow:hidden from styles.css */
 }
 
 /* grain stays but lightens */
@@ -733,7 +737,8 @@ body.about-page::before {
 /* nav */
 body.about-page nav {
   background: #081F5C;
-  border-bottom-color: rgba(246, 244, 239, 0.12);
+  border-bottom: none;
+  box-shadow: none;
 }
 
 body.about-page .logo-name,

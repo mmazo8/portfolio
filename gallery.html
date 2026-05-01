@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery — Michelle Mazo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="gallery.css" />
+</head>
+
+<body class="gallery-page">
+
+  <!-- MOBILE MENU DRAWER -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-grain"></div>
+    <ul class="mobile-menu-links">
+      <li><a href="about.html">About Me</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="gallery.html">Photo Gallery</a></li>
+    </ul>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="assets/logo.png" alt="Michelle Mazo" class="logo-img" />
+      <span class="logo-name">Michelle Mazo</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="about.html">About Me</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="gallery.html" class="nav-active">Photo Gallery</a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="gallery-wrap">
+
+    <!-- PAGE HEADER -->
+    <div class="gallery-header">
+      <span class="gallery-eyebrow">✦ CAPTURED MOMENTS</span>
+      <h1 class="gallery-title">Photo Gallery</h1>
+    </div>
+
+    <!-- GRID -->
+    <div class="gallery-grid" id="galleryGrid">
+      <!-- Photos are loaded dynamically from the /gallery folder -->
+      <!-- Fallback: if JS can't detect files, show a placeholder message -->
+    </div>
+
+    <!-- EMPTY STATE (shown if no photos found) -->
+    <div class="gallery-empty" id="galleryEmpty" style="display:none;">
+      <p class="gallery-empty-icon">📷</p>
+      <p class="gallery-empty-text">Add photos to the <code>/gallery</code> folder to see them here.</p>
+    </div>
+
+  </main>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
+    <button class="lightbox-prev" id="lightboxPrev" aria-label="Previous photo">‹</button>
+    <button class="lightbox-next" id="lightboxNext" aria-label="Next photo">›</button>
+    <div class="lightbox-inner">
+      <img class="lightbox-img" id="lightboxImg" src="" alt="" />
+    </div>
+    <div class="lightbox-counter" id="lightboxCounter"></div>
+  </div>
+
+  <script>
+    // ── HAMBURGER ──────────────────────────────────────────
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', () => {
+      const open = hamburger.classList.toggle('is-open');
+      mobileMenu.classList.toggle('is-open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('is-open');
+        mobileMenu.classList.remove('is-open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // ── GALLERY LOADER ─────────────────────────────────────
+    // Supported image extensions
+    const IMG_EXTS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif'];
+
+    // Since static HTML can't read a directory listing, we use a small
+    // convention: populate window.GALLERY_PHOTOS with filenames in an
+    // optional gallery-manifest.js, OR fall back to probing common names.
+    // If you add gallery-manifest.js that sets window.GALLERY_PHOTOS = [...],
+    // it will use that. Otherwise, auto-detection via fetch HEAD requests.
+
+    const grid = document.getElementById('galleryGrid');
+    const emptyState = document.getElementById('galleryEmpty');
+
+    let photos = []; // { src, alt }
+    let currentIndex = 0;
+
+    async function loadGallery() {
+      // Try manifest first
+      if (window.GALLERY_PHOTOS && Array.isArray(window.GALLERY_PHOTOS)) {
+        photos = window.GALLERY_PHOTOS.map((f, i) => ({
+          src: `gallery/${f}`,
+          alt: `Photo ${i + 1}`
+        }));
+      } else {
+        // Try fetching gallery/manifest.json
+        try {
+          const res = await fetch('gallery/manifest.json');
+          if (res.ok) {
+            const list = await res.json();
+            photos = list.map((f, i) => ({
+              src: `gallery/${f}`,
+              alt: `Photo ${i + 1}`
+            }));
+          }
+        } catch (e) { /* no manifest */ }
+      }
+
+      if (photos.length === 0) {
+        emptyState.style.display = 'flex';
+        return;
+      }
+
+      renderGrid();
+    }
+
+    function renderGrid() {
+      grid.innerHTML = '';
+      photos.forEach((photo, i) => {
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        item.style.animationDelay = `${i * 40}ms`;
+
+        const img = document.createElement('img');
+        img.src = photo.src;
+        img.alt = photo.alt;
+        img.loading = 'lazy';
+
+        const overlay = document.createElement('div');
+        overlay.className = 'gallery-item-overlay';
+        overlay.innerHTML = '<span class="gallery-zoom-icon">⊕</span>';
+
+        item.appendChild(img);
+        item.appendChild(overlay);
+
+        item.addEventListener('click', () => openLightbox(i));
+        grid.appendChild(item);
+      });
+    }
+
+    // ── LIGHTBOX ───────────────────────────────────────────
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const lightboxPrev = document.getElementById('lightboxPrev');
+    const lightboxNext = document.getElementById('lightboxNext');
+    const lightboxCounter = document.getElementById('lightboxCounter');
+
+    function openLightbox(index) {
+      currentIndex = index;
+      showPhoto(currentIndex);
+      lightbox.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('is-open');
+      document.body.style.overflow = '';
+      lightboxImg.src = '';
+    }
+
+    function showPhoto(index) {
+      lightboxImg.classList.remove('is-loaded');
+      lightboxImg.src = photos[index].src;
+      lightboxImg.alt = photos[index].alt;
+      lightboxImg.onload = () => lightboxImg.classList.add('is-loaded');
+      lightboxCounter.textContent = `${index + 1} / ${photos.length}`;
+
+      // Hide prev/next if only 1 photo
+      lightboxPrev.style.display = photos.length <= 1 ? 'none' : '';
+      lightboxNext.style.display = photos.length <= 1 ? 'none' : '';
+    }
+
+    function prevPhoto() {
+      currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+      showPhoto(currentIndex);
+    }
+
+    function nextPhoto() {
+      currentIndex = (currentIndex + 1) % photos.length;
+      showPhoto(currentIndex);
+    }
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightboxPrev.addEventListener('click', prevPhoto);
+    lightboxNext.addEventListener('click', nextPhoto);
+
+    // Close on backdrop click
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('is-open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') prevPhoto();
+      if (e.key === 'ArrowRight') nextPhoto();
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    lightbox.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    });
+    lightbox.addEventListener('touchend', (e) => {
+      const diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) diff > 0 ? nextPhoto() : prevPhoto();
+    });
+
+    // ── INIT ───────────────────────────────────────────────
+    loadGallery();
+  </script>
+
+</body>
+</html>
