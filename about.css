@@ -541,7 +541,8 @@
   position: relative;
   display: inline;
   cursor: default;
-  font-weight: 500;
+  font-weight: 900;
+  font-family: 'Anton', sans-serif;
 }
 
 /* the pop-up sticker */
@@ -556,6 +557,7 @@
   z-index: 10;
   width: 80px;
   height: auto;
+  font-family: 'Anton', sans-serif;
 }
 
 .marlow-highlight:hover .marlow-sticker {
