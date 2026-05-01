@@ -1,28 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>Michelle Mazo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <div class="page">
 
+    <!-- MOBILE MENU DRAWER -->
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mobile-menu-grain"></div>
+      <ul class="mobile-menu-links">
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="resume.html">Resume</a></li>
+        <li><a href="gallery.html">Photo Gallery</a></li>
+      </ul>
+    </div>
+
     <!-- NAV -->
     <nav>
-      <a href="#" class="nav-logo">
+      <a href="index.html" class="nav-logo">
         <img src="assets/logo.png" alt="Michelle Mazo" class="logo-img" />
         <span class="logo-name">Michelle Mazo</span>
       </a>
       <ul class="nav-links">
-        <li><a href="#about">About Me</a></li>
-        <li><a href="#resume">Resume</a></li>
-        <li><a href="#gallery">Photo Gallery</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="resume.html">Resume</a></li>
+        <li><a href="gallery.html">Photo Gallery</a></li>
       </ul>
+      <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </nav>
 
     <!-- HERO -->
@@ -30,7 +49,6 @@
 
       <!-- LEFT: text -->
       <div class="hero-text">
-
         <h1 class="hero-name">
           <span class="line"><span>Hi! I'm Michelle. A Product Designer.</span></span>
         </h1>
@@ -38,12 +56,12 @@
         <div class="hero-divider"></div>
 
         <p class="hero-desc">
-          a pug and coffee lover that also loves creating digital experiences that simplify, uplift, and nurture human connection.
+          a pug and coffee lover that also loves creating digital experiences that simplify, uplift, and nurture human
+          connection.
         </p>
-
       </div>
 
-      <!-- RIGHT: image placeholder -->
+      <!-- RIGHT: image -->
       <div class="hero-image">
         <img src="assets/hero.png" alt="Michelle Mazo" class="hero-photo" />
       </div>
@@ -68,5 +86,25 @@
     </footer>
 
   </div>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', () => {
+      const isOpen = hamburger.classList.toggle('is-open');
+      mobileMenu.classList.toggle('is-open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('is-open');
+        mobileMenu.classList.remove('is-open');
+        document.body.style.overflow = '';
+      });
+    });
+  </script>
 </body>
+
 </html>

@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About — Michelle Mazo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital@1&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital@1&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="about.css" />
 </head>
-<body>
+
+<body class="about-page">
   <div class="page">
 
     <!-- NAV -->
@@ -44,22 +48,28 @@
       <section class="bio-section">
         <div class="bio-grid">
           <div class="bio-text reveal">
-            <p class="bio-eyebrow">About Me</p>
             <h2 class="bio-heading">Hi, I'm Michelle.</h2>
             <p class="bio-body">
-              A UCSD alumna with a Bachelor's in Human-Computer Interaction and a minor in Computer Science, I've spent the last 5 years doing what I genuinely love — designing. My background bridges the gap between human empathy and technical precision, which means I don't just make things look good, I make them work beautifully for the people using them.
+              A UCSD alumna with a Bachelor's in Human-Computer Interaction and a minor in Computer Science, I've spent
+              the last 5 years doing what I genuinely love — designing. My background bridges the gap between human
+              empathy and technical precision, which means I don't just make things look good, I make them work
+              beautifully for the people using them.
             </p>
             <p class="bio-body">
-              Over the years I've worked across product design, UX research, and visual design — always with the same north star: create experiences that feel effortless and look intentional. I believe great design is invisible; it guides you without you noticing.
+              Over the years I've worked across product design, UX research, and visual design — always with the same
+              north star: create experiences that feel effortless and look intentional. I believe great design is
+              invisible; it guides you without you noticing.
             </p>
             <p class="bio-body">
-              When I'm not pushing pixels, you'll find me on the ice rink, behind a camera lens, or deep in a rabbit hole of interior design inspiration. Design isn't just my job — it's the lens through which I see everything.
+              When I'm not pushing pixels, you'll find me on the ice rink, behind a camera lens, or deep in a rabbit
+              hole of interior design inspiration. Design isn't just my job — it's the lens through which I see
+              everything.
             </p>
           </div>
 
           <div class="bio-image-col reveal-right">
             <div class="bio-img-frame">
-              <img src="assets/hero.png" alt="Michelle Mazo" class="bio-photo" />
+              <img src="assets/me.png" alt="Michelle Mazo" class="bio-photo" />
               <!-- Floating sticker -->
               <div class="sticker sticker-camera">📷</div>
             </div>
@@ -107,17 +117,7 @@
                 <span>Opening blind boxes</span>
                 <!-- Blind box character sticker -->
                 <div class="blindbox-sticker">
-                  <div class="bb-char">
-                    <div class="bb-head">
-                      <div class="bb-eye bb-eye--l"></div>
-                      <div class="bb-eye bb-eye--r"></div>
-                      <div class="bb-mouth"></div>
-                    </div>
-                    <div class="bb-body"></div>
-                    <div class="bb-star bb-star--1">★</div>
-                    <div class="bb-star bb-star--2">✦</div>
-                    <div class="bb-star bb-star--3">★</div>
-                  </div>
+                  <img src="assets/popmart.png" alt="Pop Mart figure" class="bb-img" />
                 </div>
               </li>
             </ul>
@@ -149,10 +149,17 @@
       <section class="dog-section reveal">
         <div class="dog-inner">
           <div class="dog-text">
-            <p class="bio-eyebrow">& Most Importantly</p>
             <h2 class="dog-heading">Meet Marlow.</h2>
             <p class="bio-body">
-              Chief of good vibes, professional napper, and my most loyal creative companion. Marlow has been by my side through every late-night design sprint and every celebratory moment. Equal parts chaos and comfort — basically my spirit animal.
+              Chief of good vibes, professional <span class="marlow-highlight">napper<span class="marlow-sticker"><img
+                    src="assets/napping.png" alt="Marlow"></span></span>, and my most loyal creative companion. Marlow
+              has been by my
+              side through every late-night design sprint and every celebratory moment. Equal parts <span
+                class="marlow-highlight">chaos<span class="marlow-sticker"><img src="assets/walk.png"
+                    alt="Marlow"></span></span> and <span class="marlow-highlight">comfort<span
+                  class="marlow-sticker"><img src="assets/watermelon.png" alt="Marlow"></span></span> — basically my
+              spirit
+              animal.
             </p>
           </div>
           <div class="dog-img-wrap">
@@ -197,4 +204,5 @@
     loveItems.forEach(el => loveObserver.observe(el));
   </script>
 </body>
+
 </html>
