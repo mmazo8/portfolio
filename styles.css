@@ -17,7 +17,7 @@
 html,
 body {
   height: 100%;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Mono', sans-serif;
   background: var(--cream);
   color: var(--ink);
   overflow: hidden;
@@ -362,7 +362,7 @@ nav {
 }
 
 .hs-label {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Mono', sans-serif;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.26em;
@@ -394,7 +394,7 @@ nav {
 }
 
 .work-eyebrow {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Mono', sans-serif;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.26em;
@@ -519,7 +519,7 @@ nav {
 }
 
 .work-index {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Mono', sans-serif;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.24em;
@@ -539,7 +539,7 @@ nav {
 }
 
 .work-desc {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Mono', sans-serif;
   font-size: 13.5px;
   line-height: 1.75;
   color: var(--ink);
@@ -566,7 +566,7 @@ nav {
 }
 
 .meta-label {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Mono', sans-serif;
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -577,7 +577,7 @@ nav {
 }
 
 .meta-value {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Mono', sans-serif;
   font-size: 13px;
   color: var(--ink);
   opacity: 0.65;
@@ -645,7 +645,7 @@ nav {
 }
 
 .placeholder-sub {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Mono', sans-serif;
   font-size: 11px;
   letter-spacing: 0.1em;
   color: var(--muted);
@@ -776,7 +776,7 @@ nav {
 }
 
 .tl-title {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Mono', sans-serif;
   font-size: 15px;
   font-weight: 600;
   color: var(--ink);
@@ -784,7 +784,7 @@ nav {
 }
 
 .tl-company {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Mono', sans-serif;
   font-size: 12px;
   font-weight: 400;
   color: var(--muted);
@@ -793,7 +793,7 @@ nav {
 
 /* Col 3: description */
 .tl-desc {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Mono', sans-serif;
   font-size: 13.5px;
   font-weight: 300;
   line-height: 1.75;
@@ -1153,7 +1153,7 @@ nav {
 }
 
 .footer-made {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Mono', sans-serif;
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.12em;
