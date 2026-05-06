@@ -12,6 +12,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@300;400;500;600&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 </head>
 
 <body>
@@ -149,7 +151,8 @@
                   <span class="meta-value meta-bold">UX Research, Visual Design, Design Systems</span>
                 </div>
               </div>
-              <a href="https://www.figma.com/deck/tjX3ZRs8IdQeimUTnVQ88e/Jax?node-id=1-1910&viewport=75%2C-40%2C0.53&t=rsh311d8eLvyErG1-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1" class="work-cta" target="_blank"><span>View Case Study</span> →</a>
+              <a href="https://www.figma.com/deck/tjX3ZRs8IdQeimUTnVQ88e/Jax?node-id=1-1910&viewport=75%2C-40%2C0.53&t=rsh311d8eLvyErG1-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1"
+                class="work-cta" target="_blank"><span>View Case Study</span> →</a>
             </div>
             <div class="work-visual">
               <div class="work-img-placeholder">
@@ -182,7 +185,8 @@
                   <span class="meta-value meta-bold">UX Research, Visual Design, Design Systems, A/B Testing</span>
                 </div>
               </div>
-              <a href="https://www.figma.com/deck/nXj09TnVEw7TaD4EiZ83VX/Edventure?node-id=1-96&viewport=75%2C-40%2C0.53&t=wDIzOc87xC3Mc4zL-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1" class="work-cta" target="_blank"><span>View Case Study</span> →</a>
+              <a href="https://www.figma.com/deck/nXj09TnVEw7TaD4EiZ83VX/Edventure?node-id=1-96&viewport=75%2C-40%2C0.53&t=wDIzOc87xC3Mc4zL-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1"
+                class="work-cta" target="_blank"><span>View Case Study</span> →</a>
             </div>
             <div class="work-visual">
               <div class="work-img-placeholder">
@@ -330,32 +334,33 @@
   </div><!-- /snap-container -->
 
   <script>
+    gsap.registerPlugin(ScrollTrigger);
+
     // ── SNAP AWARENESS ───────────────────────────────────
     const snapContainer = document.getElementById('snapContainer');
     const heroScrollHint = document.getElementById('heroScrollHint');
 
-    function isInWork() {
-      const sh = snapContainer.clientHeight;
-      return snapContainer.scrollTop > sh * 0.5 && snapContainer.scrollTop < sh * 1.5;
-    }
-
     snapContainer.addEventListener('scroll', () => {
-      heroScrollHint.style.opacity = isInWork() || snapContainer.scrollTop > snapContainer.clientHeight * 0.5 ? '0' : '1';
-      heroScrollHint.style.pointerEvents = snapContainer.scrollTop > snapContainer.clientHeight * 0.5 ? 'none' : 'all';
+      const past = snapContainer.scrollTop > snapContainer.clientHeight * 0.5;
+      heroScrollHint.style.opacity = past ? '0' : '1';
+      heroScrollHint.style.pointerEvents = past ? 'none' : 'all';
     }, { passive: true });
 
     heroScrollHint.addEventListener('click', () => {
       snapContainer.scrollTo({ top: snapContainer.clientHeight, behavior: 'smooth' });
     });
 
-    // ── WORK CARD ENGINE ─────────────────────────────────
+    // ── WORK CARD ENGINE (Observer + GSAP) ───────────────
     const track = document.getElementById('workTrack');
     const progressEl = document.getElementById('workProgress');
     const toggleBtns = document.querySelectorAll('.toggle-btn');
+
     let currentIndex = 0;
+    let allowScroll = true;
+    const scrollCooldown = gsap.delayedCall(1, () => allowScroll = true).pause();
 
     function getVisibleCards() {
-      return [...track.querySelectorAll('.work-card:not(.hidden)')];
+      return gsap.utils.toArray('.work-card:not(.hidden)', track);
     }
 
     function buildProgress(cards) {
@@ -364,31 +369,80 @@
         const pip = document.createElement('button');
         pip.className = 'progress-pip' + (i === currentIndex ? ' active' : '');
         pip.setAttribute('aria-label', `Project ${i + 1}`);
-        pip.addEventListener('click', () => goTo(i));
+        pip.addEventListener('click', () => gotoCard(i, i > currentIndex));
         progressEl.appendChild(pip);
       });
     }
 
-    function goTo(index) {
+    function updatePips() {
+      progressEl.querySelectorAll('.progress-pip').forEach((p, i) => {
+        p.classList.toggle('active', i === currentIndex);
+      });
+    }
+
+    function gotoCard(index, isDown) {
       const cards = getVisibleCards();
       if (!cards[index]) return;
-      currentIndex = index;
-      cards.forEach((card, i) => {
-        card.classList.remove('is-active', 'is-below', 'is-above');
-        if (i === index) card.classList.add('is-active');
-        else if (i < index) card.classList.add('is-above');
-        else card.classList.add('is-below');
+
+      allowScroll = false;
+      scrollCooldown.restart(true);
+
+      const incoming = cards[index];
+      const outgoing = cards[currentIndex];
+
+      // Stack effect: outgoing card scales back and peeks at top
+      gsap.to(outgoing, {
+        scale: isDown ? 0.95 : 1,
+        yPercent: isDown ? -3 : 100,
+        opacity: isDown ? 0.6 : 0,
+        duration: 0.75,
+        ease: 'power3.inOut',
+        onComplete: () => {
+          if (!isDown) gsap.set(outgoing, { yPercent: 100, scale: 1, opacity: 1 });
+        }
       });
-      buildProgress(cards);
+
+      // Incoming card slides up from bottom with a bounce
+      gsap.fromTo(incoming,
+        { yPercent: isDown ? 100 : -5, scale: isDown ? 1 : 0.95, opacity: isDown ? 1 : 0.6 },
+        {
+          yPercent: 0,
+          scale: 1,
+          opacity: 1,
+          duration: 0.75,
+          ease: 'back.out(1.4)',
+        }
+      );
+
+      incoming.classList.add('is-active');
+      outgoing.classList.remove('is-active');
+      currentIndex = index;
+      updatePips();
     }
 
     function applyFilter(filter) {
       currentIndex = 0;
-      [...track.querySelectorAll('.work-card')].forEach(card => {
-        card.classList.remove('is-active', 'is-below', 'is-above', 'hidden');
-        if (card.dataset.category !== filter) card.classList.add('hidden');
+      allowScroll = true;
+
+      gsap.utils.toArray('.work-card', track).forEach(card => {
+        card.classList.remove('is-active', 'hidden');
+        if (card.dataset.category !== filter) {
+          card.classList.add('hidden');
+          gsap.set(card, { yPercent: 100, scale: 1, opacity: 1 });
+        }
       });
-      goTo(0);
+
+      const cards = getVisibleCards();
+      cards.forEach((card, i) => {
+        if (i === 0) {
+          gsap.set(card, { yPercent: 0, scale: 1, opacity: 1 });
+          card.classList.add('is-active');
+        } else {
+          gsap.set(card, { yPercent: 100, scale: 1, opacity: 1 });
+        }
+      });
+
+      buildProgress(cards);
     }
 
     toggleBtns.forEach(btn => {
@@ -396,60 +450,74 @@
         toggleBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         applyFilter(btn.dataset.filter);
+        intentObserver.enable();
       });
     });
 
-    // Wheel: intercept only when inside the work section
-    // Lock immediately on first scroll intent, ignore all events until animation done
-    let wheelLocked = false;
-    let wheelTimer = null;
-
-    snapContainer.addEventListener('wheel', (e) => {
-      if (!isInWork()) return;
-
-      const cards = getVisibleCards();
-      const goingDown = e.deltaY > 0;
-      const goingUp = e.deltaY < 0;
-
-      // Let snap container handle section transitions at the boundaries
-      if (goingUp && currentIndex === 0) return;
-      if (goingDown && currentIndex >= cards.length - 1) return;
-
-      // Always prevent default while in work section (stops section snap fighting)
-      e.preventDefault();
-
-      if (wheelLocked) return;
-      wheelLocked = true;
-
-      if (goingDown) goTo(currentIndex + 1);
-      else goTo(currentIndex - 1);
-
-      // Clear any pending unlock, set a fresh one
-      clearTimeout(wheelTimer);
-      wheelTimer = setTimeout(() => { wheelLocked = false; }, 900);
-    }, { passive: false });
-
-    // Keyboard arrows
-    window.addEventListener('keydown', (e) => {
-      if (!isInWork()) return;
-      const cards = getVisibleCards();
-      if (e.key === 'ArrowDown' && currentIndex < cards.length - 1) goTo(currentIndex + 1);
-      if (e.key === 'ArrowUp' && currentIndex > 0) goTo(currentIndex - 1);
+    // ── OBSERVER (the GSAP-recommended pattern) ──────────
+    // Observer watches wheel+touch inside the work section.
+    // At first/last card it disables itself so the outer snap takes over.
+    const intentObserver = ScrollTrigger.observe({
+      target: track,
+      type: 'wheel,touch',
+      tolerance: 1,
+      preventDefault: true,
+      onEnable(self) {
+        allowScroll = true;
+      },
+      onDisable: () => { },
+      onUp: () => {
+        if (!allowScroll) return;
+        if (currentIndex === 0) {
+          intentObserver.disable();
+          return;
+        }
+        gotoCard(currentIndex - 1, false);
+      },
+      onDown: () => {
+        if (!allowScroll) return;
+        const cards = getVisibleCards();
+        if (currentIndex === cards.length - 1) {
+          intentObserver.disable();
+          return;
+        }
+        gotoCard(currentIndex + 1, true);
+      },
     });
+    intentObserver.disable();
 
-    // Touch
-    let touchStartY = 0;
-    snapContainer.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
-    snapContainer.addEventListener('touchend', e => {
-      if (!isInWork()) return;
-      const delta = touchStartY - e.changedTouches[0].clientY;
-      const cards = getVisibleCards();
-      if (Math.abs(delta) < 50) return;
-      if (delta > 0 && currentIndex < cards.length - 1) goTo(currentIndex + 1);
-      else if (delta < 0 && currentIndex > 0) goTo(currentIndex - 1);
+    // ── SECTION DETECTION via snap container scroll ──────
+    // Instead of ScrollTrigger (which fights scroll-snap), we watch
+    // the snap container's scrollTop directly to know when we're in the work section.
+
+    function isInWork() {
+      const sh = snapContainer.clientHeight;
+      return Math.round(snapContainer.scrollTop / sh) === 1;
+    }
+
+    snapContainer.addEventListener('scroll', () => {
+      if (isInWork()) {
+        if (!intentObserver.isEnabled) intentObserver.enable();
+      } else {
+        if (intentObserver.isEnabled) intentObserver.disable();
+        // Re-entering from below (timeline → work): restore last-card state
+        const sh = snapContainer.clientHeight;
+        if (snapContainer.scrollTop < sh * 1.5 && snapContainer.scrollTop > sh * 0.5) return;
+        if (snapContainer.scrollTop > sh * 1.5 && !intentObserver.isEnabled) {
+          // coming from below — reset to last card so it's ready
+        }
+      }
     }, { passive: true });
 
-    // Mobile prev/next
+    // ── KEYBOARD ─────────────────────────────────────────
+    window.addEventListener('keydown', (e) => {
+      if (!intentObserver.isEnabled) return;
+      const cards = getVisibleCards();
+      if (e.key === 'ArrowDown' && currentIndex < cards.length - 1) gotoCard(currentIndex + 1, true);
+      if (e.key === 'ArrowUp' && currentIndex > 0) gotoCard(currentIndex - 1, false);
+    });
+
+    // ── MOBILE NAV ───────────────────────────────────────
     const mobileNav = document.getElementById('workMobileNav');
     const wmnPrev = document.getElementById('wmnPrev');
     const wmnNext = document.getElementById('wmnNext');
@@ -460,8 +528,8 @@
       wmnNext.disabled = currentIndex >= cards.length - 1;
     }
 
-    wmnPrev.addEventListener('click', () => { if (currentIndex > 0) goTo(currentIndex - 1); updateMobileNav(); });
-    wmnNext.addEventListener('click', () => { const c = getVisibleCards(); if (currentIndex < c.length - 1) goTo(currentIndex + 1); updateMobileNav(); });
+    wmnPrev.addEventListener('click', () => { if (currentIndex > 0) { gotoCard(currentIndex - 1, false); updateMobileNav(); } });
+    wmnNext.addEventListener('click', () => { if (currentIndex < getVisibleCards().length - 1) { gotoCard(currentIndex + 1, true); updateMobileNav(); } });
 
     if (window.innerWidth <= 768) mobileNav.style.display = 'flex';
     window.addEventListener('resize', () => {
