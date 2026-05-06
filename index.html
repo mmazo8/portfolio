@@ -12,13 +12,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@300;400;500;600&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap"
     rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+
 </head>
 
 <body>
@@ -33,7 +34,7 @@
     </ul>
   </div>
 
-  <!-- NAV — fixed, floats above both snap sections -->
+  <!-- NAV -->
   <nav>
     <a href="index.html" class="nav-logo">
       <img src="assets/logo.png" alt="Michelle Mazo" class="logo-img" />
@@ -51,10 +52,10 @@
     </button>
   </nav>
 
-  <!-- SNAP CONTAINER -->
+  <!-- SCROLL CONTAINER -->
   <div class="snap-container" id="snapContainer">
 
-    <!-- ── SNAP SECTION 1: HERO ── -->
+    <!-- ── SECTION 1: HERO ── -->
     <section class="snap-section hero-section">
       <div class="hero">
         <div class="hero-text">
@@ -71,11 +72,9 @@
           <img src="assets/hero.gif" alt="Michelle Mazo" class="hero-photo" />
         </div>
       </div>
-
-      <!-- Scroll nudge -->
       <button class="hero-scroll-hint" id="heroScrollHint" aria-label="Scroll to work">
         <span class="hs-label">My Work</span>
-        <svg class="hs-arrow" width="14" height="22" viewBox="0 0 14 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="hs-arrow" width="14" height="22" viewBox="0 0 14 22" fill="none">
           <line x1="7" y1="1" x2="7" y2="17" stroke="currentColor" stroke-width="1.2" />
           <polyline points="2,12 7,18 12,12" fill="none" stroke="currentColor" stroke-width="1.2"
             stroke-linejoin="round" />
@@ -83,10 +82,9 @@
       </button>
     </section>
 
-    <!-- ── SNAP SECTION 2: WORK ── -->
-    <section class="snap-section work-section" id="workSection">
+    <!-- ── SECTION 2: WORK ── -->
+    <section class="work-section" id="workSection">
 
-      <!-- Toggle sub-header -->
       <div class="work-subheader">
         <span class="work-eyebrow">Selected Work</span>
         <div class="work-toggle">
@@ -96,137 +94,143 @@
         </div>
       </div>
 
-      <!-- Card stack -->
+      <div class="work-progress" id="workProgress"></div>
+
       <div class="work-track" id="workTrack">
 
         <!-- PROJECT 1 -->
-        <div class="work-card" data-category="case-study">
-          <div class="work-card-body">
-            <div class="work-info">
-              <p class="work-index">01 / Case Study</p>
-              <h2 class="work-title">Fundraise-<br>a-thon</h2>
-              <p class="work-desc">Designed the user experience for Fundraise-a-thon, turning traditional school
-                fundraising into a digital experience.</p>
-              <p class="work-desc">Conducted user research and created flows for parents and administrators.</p>
-              <div class="work-meta">
-                <div class="work-meta-row">
-                  <span class="meta-label">Years</span>
-                  <span class="meta-value">2025 – Present</span>
+        <div class="work-card-wrapper" data-category="case-study">
+          <div class="work-card" data-category="case-study">
+            <div class="work-card-body">
+              <div class="work-info">
+                <p class="work-index">01 / Case Study</p>
+                <h2 class="work-title">Fundraise-<br>a-thon</h2>
+                <p class="work-desc">Designed the user experience for Fundraise-a-thon, turning traditional school
+                  fundraising into a digital experience.</p>
+                <p class="work-desc">Conducted user research and created flows for parents and administrators.</p>
+                <div class="work-meta">
+                  <div class="work-meta-row">
+                    <span class="meta-label">Years</span>
+                    <span class="meta-value">2025 – Present</span>
+                  </div>
+                  <div class="work-meta-row">
+                    <span class="meta-label">Role</span>
+                    <span class="meta-value meta-bold">Lead Product Designer</span>
+                  </div>
+                  <div class="work-meta-row">
+                    <span class="meta-label">Scope</span>
+                    <span class="meta-value meta-bold">Product Strategy, UX/UI,<br>Prototyping, User Testing,<br>Design Systems</span>
+                  </div>
                 </div>
-                <div class="work-meta-row">
-                  <span class="meta-label">Role</span>
-                  <span class="meta-value meta-bold">Lead Product Designer</span>
-                </div>
-                <div class="work-meta-row">
-                  <span class="meta-label">Scope</span>
-                  <span class="meta-value meta-bold">Product Strategy, UX/UI,<br>Prototyping, User Testing,<br>Design
-                    Systems</span>
-                </div>
+                <a href="#" class="work-cta"><span>View Case Study</span> →</a>
               </div>
-              <a href="#" class="work-cta"><span>View Case Study</span> →</a>
-            </div>
-            <div class="work-visual">
-              <div class="work-img-placeholder">
-                <img src="assets/fundraiseathon.png" alt="fundraise-a-thon cover" />
+              <div class="work-visual">
+                <div class="work-img-placeholder">
+                  <img src="assets/fundraiseathon.png" alt="fundraise-a-thon cover" />
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- PROJECT 2 -->
-        <div class="work-card" data-category="case-study">
-          <div class="work-card-body">
-            <div class="work-info">
-              <p class="work-index">02 / Case Study</p>
-              <h2 class="work-title">JAX<br>Booking</h2>
-              <p class="work-desc">At Newco, I worked as a product designer for over a year, leading projects centered
-                around Jax, an AI travel assistant. One of my main contributions was designing a streamlined booking
-                experience that made trip planning and booking more intuitive for users.</p>
-              <div class="work-meta">
-                <div class="work-meta-row">
-                  <span class="meta-label">Years</span>
-                  <span class="meta-value">2024 – Present</span>
+        <div class="work-card-wrapper" data-category="case-study">
+          <div class="work-card" data-category="case-study">
+            <div class="work-card-body">
+              <div class="work-info">
+                <p class="work-index">02 / Case Study</p>
+                <h2 class="work-title">JAX<br>Booking</h2>
+                <p class="work-desc">At Newco, I led design for Jax, an AI travel assistant — creating a streamlined
+                  booking experience that made trip planning more intuitive for users.</p>
+                <div class="work-meta">
+                  <div class="work-meta-row">
+                    <span class="meta-label">Years</span>
+                    <span class="meta-value">2024 – Present</span>
+                  </div>
+                  <div class="work-meta-row">
+                    <span class="meta-label">Role</span>
+                    <span class="meta-value meta-bold">Lead Product Designer</span>
+                  </div>
+                  <div class="work-meta-row">
+                    <span class="meta-label">Scope</span>
+                    <span class="meta-value meta-bold">UX Research, Visual Design, Design Systems</span>
+                  </div>
                 </div>
-                <div class="work-meta-row">
-                  <span class="meta-label">Role</span>
-                  <span class="meta-value meta-bold">Lead Product Designer</span>
-                </div>
-                <div class="work-meta-row">
-                  <span class="meta-label">Scope</span>
-                  <span class="meta-value meta-bold">UX Research, Visual Design, Design Systems</span>
-                </div>
+                <a href="https://www.figma.com/deck/tjX3ZRs8IdQeimUTnVQ88e/Jax?node-id=1-1910&viewport=75%2C-40%2C0.53&t=rsh311d8eLvyErG1-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1"
+                  class="work-cta" target="_blank"><span>View Case Study</span> →</a>
               </div>
-              <a href="https://www.figma.com/deck/tjX3ZRs8IdQeimUTnVQ88e/Jax?node-id=1-1910&viewport=75%2C-40%2C0.53&t=rsh311d8eLvyErG1-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1"
-                class="work-cta" target="_blank"><span>View Case Study</span> →</a>
-            </div>
-            <div class="work-visual">
-              <div class="work-img-placeholder">
-                <img src="assets/jax.png" alt="jax booking cover" />
+              <div class="work-visual">
+                <div class="work-img-placeholder">
+                  <img src="assets/jax.png" alt="jax booking cover" />
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- PROJECT 3 -->
-        <div class="work-card" data-category="case-study">
-          <div class="work-card-body">
-            <div class="work-info">
-              <p class="work-index">03 / Case Study</p>
-              <h2 class="work-title">ED<br>Venture</h2>
-              <p class="work-desc">EdVenture is an educational VR platform designed to connect learners and teachers
-                through immersive, real-time classes. Users can develop new skills, explore hobbies, and share their
-                expertise with a global learning community.</p>
-              <div class="work-meta">
-                <div class="work-meta-row">
-                  <span class="meta-label">Years</span>
-                  <span class="meta-value">2024 – Present</span>
+        <div class="work-card-wrapper" data-category="case-study">
+          <div class="work-card" data-category="case-study">
+            <div class="work-card-body">
+              <div class="work-info">
+                <p class="work-index">03 / Case Study</p>
+                <h2 class="work-title">ED<br>Venture</h2>
+                <p class="work-desc">EdVenture is an educational VR platform connecting learners and teachers through
+                  immersive, real-time classes with a global learning community.</p>
+                <div class="work-meta">
+                  <div class="work-meta-row">
+                    <span class="meta-label">Years</span>
+                    <span class="meta-value">2024 – Present</span>
+                  </div>
+                  <div class="work-meta-row">
+                    <span class="meta-label">Role</span>
+                    <span class="meta-value meta-bold">Lead Product Designer</span>
+                  </div>
+                  <div class="work-meta-row">
+                    <span class="meta-label">Scope</span>
+                    <span class="meta-value meta-bold">UX Research, Visual Design, Design Systems, A/B Testing</span>
+                  </div>
                 </div>
-                <div class="work-meta-row">
-                  <span class="meta-label">Role</span>
-                  <span class="meta-value meta-bold">Lead Product Designer</span>
-                </div>
-                <div class="work-meta-row">
-                  <span class="meta-label">Scope</span>
-                  <span class="meta-value meta-bold">UX Research, Visual Design, Design Systems, A/B Testing</span>
-                </div>
+                <a href="https://www.figma.com/deck/nXj09TnVEw7TaD4EiZ83VX/Edventure?node-id=1-96&viewport=75%2C-40%2C0.53&t=wDIzOc87xC3Mc4zL-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1"
+                  class="work-cta" target="_blank"><span>View Case Study</span> →</a>
               </div>
-              <a href="https://www.figma.com/deck/nXj09TnVEw7TaD4EiZ83VX/Edventure?node-id=1-96&viewport=75%2C-40%2C0.53&t=wDIzOc87xC3Mc4zL-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1"
-                class="work-cta" target="_blank"><span>View Case Study</span> →</a>
-            </div>
-            <div class="work-visual">
-              <div class="work-img-placeholder">
-                <img src="assets/edventure.png" alt="edventure cover" />
+              <div class="work-visual">
+                <div class="work-img-placeholder">
+                  <img src="assets/edventure.png" alt="edventure cover" />
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- PROJECT 4 — website -->
-        <div class="work-card" data-category="website">
-          <div class="work-card-body">
-            <div class="work-info">
-              <p class="work-index">01 / Website</p>
-              <h2 class="work-title">Scentcoinc<br>Redesign</h2>
-              <p class="work-desc">A website design project showcasing visual design and interaction design work.</p>
-              <div class="work-meta">
-                <div class="work-meta-row">
-                  <span class="meta-label">Years</span>
-                  <span class="meta-value">2025</span>
+        <div class="work-card-wrapper" data-category="website">
+          <div class="work-card" data-category="website">
+            <div class="work-card-body">
+              <div class="work-info">
+                <p class="work-index">01 / Website</p>
+                <h2 class="work-title">Scentcoinc<br>Redesign</h2>
+                <p class="work-desc">A website design project showcasing visual design and interaction design work.</p>
+                <div class="work-meta">
+                  <div class="work-meta-row">
+                    <span class="meta-label">Years</span>
+                    <span class="meta-value">2025</span>
+                  </div>
+                  <div class="work-meta-row">
+                    <span class="meta-label">Role</span>
+                    <span class="meta-value meta-bold">Visual Designer</span>
+                  </div>
+                  <div class="work-meta-row">
+                    <span class="meta-label">Scope</span>
+                    <span class="meta-value meta-bold">Visual Design, Prototyping</span>
+                  </div>
                 </div>
-                <div class="work-meta-row">
-                  <span class="meta-label">Role</span>
-                  <span class="meta-value meta-bold">Visual Designer</span>
-                </div>
-                <div class="work-meta-row">
-                  <span class="meta-label">Scope</span>
-                  <span class="meta-value meta-bold">Visual Design, Prototyping</span>
-                </div>
+                <a href="scentcoinc.com" class="work-cta"><span>View Project</span> →</a>
               </div>
-              <a href="scentcoinc.com" class="work-cta"><span>View Project</span> →</a>
-            </div>
-            <div class="work-visual">
-              <div class="work-img-placeholder">
-                <img src="assets/scentco.png" alt="scentco cover" />
+              <div class="work-visual">
+                <div class="work-img-placeholder">
+                  <img src="assets/scentco.png" alt="scentco cover" />
+                </div>
               </div>
             </div>
           </div>
@@ -234,29 +238,17 @@
 
       </div><!-- /work-track -->
 
-      <!-- Progress pips -->
-      <div class="work-progress" id="workProgress"></div>
-
-      <!-- Mobile prev/next (only visible on small screens) -->
-      <div class="work-mobile-nav" id="workMobileNav" style="display:none">
-        <button class="wmn-btn" id="wmnPrev">← Prev</button>
-        <button class="wmn-btn" id="wmnNext">Next →</button>
-      </div>
-
     </section>
 
-    <!-- ── SNAP SECTION 3: TIMELINE ── -->
+    <!-- ── SECTION 3: TIMELINE ── -->
     <section class="snap-section timeline-section" id="timelineSection">
 
       <div class="timeline-inner">
-
         <div class="timeline-header">
           <span class="tl-icon">✦</span>
           <h3 class="tl-title-heading">Experience</h3>
         </div>
-
         <ul class="timeline-list">
-
           <li class="tl-item" style="--i:0">
             <span class="tl-years">2024 – Present</span>
             <div class="tl-role">
@@ -266,7 +258,6 @@
             <span class="tl-desc">Leading product design for Jax, an AI travel assistant. Owned end-to-end design from
               discovery through delivery, including the core booking experience and design system.</span>
           </li>
-
           <li class="tl-item" style="--i:1">
             <span class="tl-years">2025 – Present</span>
             <div class="tl-role">
@@ -276,17 +267,15 @@
             <span class="tl-desc">Designing the end-to-end user experience for a digital school fundraising platform,
               conducting user research and creating flows for parents and administrators.</span>
           </li>
-
           <li class="tl-item" style="--i:2">
             <span class="tl-years">2023</span>
             <div class="tl-role">
-              <span class="tl-title">Product Designer/Devveloper</span>
+              <span class="tl-title">Product Designer / Developer</span>
               <span class="tl-company">Relentless Agency</span>
             </div>
             <span class="tl-desc">Designed an educational VR platform connecting learners and teachers through immersive
               real-time classes, covering UX research, visual design, and A/B testing.</span>
           </li>
-
           <li class="tl-item" style="--i:3">
             <span class="tl-years">2020 – 2024</span>
             <div class="tl-role">
@@ -296,12 +285,9 @@
             <span class="tl-desc">Studied the intersection of design and technology with a minor in Computer Science,
               building the foundation for bridging human empathy with technical precision.</span>
           </li>
-
         </ul>
-
       </div>
 
-      <!-- Footer bar at bottom of this section -->
       <footer class="site-footer">
         <a href="index.html" class="footer-logo">
           <img src="assets/logo.png" alt="Michelle Mazo" />
@@ -341,208 +327,169 @@
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
-    // ── SNAP AWARENESS ───────────────────────────────────
     const snapContainer = document.getElementById('snapContainer');
     const heroScrollHint = document.getElementById('heroScrollHint');
+    const progressEl = document.getElementById('workProgress');
+    const toggleBtns = document.querySelectorAll('.toggle-btn');
 
+    // ── HERO SCROLL HINT ─────────────────────────────────
     snapContainer.addEventListener('scroll', () => {
-      const past = snapContainer.scrollTop > snapContainer.clientHeight * 0.5;
+      const past = snapContainer.scrollTop > snapContainer.clientHeight * 0.4;
       heroScrollHint.style.opacity = past ? '0' : '1';
       heroScrollHint.style.pointerEvents = past ? 'none' : 'all';
     }, { passive: true });
 
     heroScrollHint.addEventListener('click', () => {
-      snapContainer.scrollTo({ top: snapContainer.clientHeight, behavior: 'smooth' });
+      document.getElementById('workSection').scrollIntoView({ behavior: 'smooth' });
     });
 
-    // ── WORK CARD ENGINE (Observer + GSAP) ───────────────
-    const track = document.getElementById('workTrack');
-    const progressEl = document.getElementById('workProgress');
-    const toggleBtns = document.querySelectorAll('.toggle-btn');
+    // ── STACKING CARD ANIMATION ──────────────────────────
+    // Direct port of the reference pattern:
+    //   • Each .work-card-wrapper is pinned with pinSpacing: false
+    //   • As you scroll past it, the card scrubs to a scaled + rotated state
+    //   • The last visible card stays flat (scale 1, rotationX 0)
+    //   • All ScrollTriggers use snapContainer as the scroller
 
-    let currentIndex = 0;
-    let allowScroll = true;
-    const scrollCooldown = gsap.delayedCall(1, () => allowScroll = true).pause();
+    let activeScrollTriggers = [];
 
-    function getVisibleCards() {
-      return gsap.utils.toArray('.work-card:not(.hidden)', track);
+    function buildStackAnimation(filter) {
+      // Kill existing triggers and reset card transforms
+      activeScrollTriggers.forEach(st => st.kill());
+      activeScrollTriggers = [];
+      ScrollTrigger.refresh();
+
+      gsap.utils.toArray('.work-card-wrapper').forEach(wrapper => {
+        gsap.set(wrapper.querySelector('.work-card'), { clearProps: 'all' });
+        wrapper.style.display = '';
+      });
+
+      // Split into visible/hidden by filter
+      const allWrappers = gsap.utils.toArray('.work-card-wrapper');
+      const visible = allWrappers.filter(w => w.dataset.category === filter);
+      const hidden  = allWrappers.filter(w => w.dataset.category !== filter);
+      hidden.forEach(w => { w.style.display = 'none'; });
+
+      buildProgress(visible.length);
+
+      // Nav (97px) + subheader (~57px) = 154px of fixed chrome at the top
+      const PIN_TOP = 154;
+
+      visible.forEach((wrapper, i) => {
+        const card = wrapper.querySelector('.work-card');
+        const isLast = i === visible.length - 1;
+
+        if (isLast) {
+          // Last card: pinned with pinSpacing true so it creates real scroll
+          // distance — page scrolls naturally past it into the next section.
+          const st = ScrollTrigger.create({
+            trigger: wrapper,
+            start: 'top ' + (PIN_TOP + 10 * i),
+            end: '+=600',
+            scrub: 0.5,
+            pin: wrapper,
+            pinSpacing: true,
+            scroller: snapContainer,
+          });
+          activeScrollTriggers.push(st);
+          return;
+        }
+
+        // Non-last cards: animate to their buried state, then stay there.
+        // We do this in two steps:
+        // 1. A short ScrollTrigger runs the scale/tilt animation
+        // 2. onLeave freezes the final transform so the card never moves again
+        const anim = gsap.to(card, {
+          scale: 0.9 + 0.025 * i,
+          rotationX: -10,
+          transformOrigin: 'top center',
+          ease: 'none',
+          paused: true,
+        });
+
+        const st = ScrollTrigger.create({
+          trigger: wrapper,
+          start: 'top ' + (PIN_TOP + 10 * i),
+          end: 'bottom 550',
+          endTrigger: '.work-track',
+          scrub: 0.5,
+          pin: wrapper,
+          pinSpacing: false,
+          scroller: snapContainer,
+          animation: anim,
+          // Once the card is fully buried, lock it at progress=1 forever
+          onLeave: () => anim.progress(1).pause(),
+          onLeaveBack: () => anim.play(),
+        });
+
+        activeScrollTriggers.push(st);
+      });
     }
 
-    function buildProgress(cards) {
+    // ── PROGRESS PIPS ────────────────────────────────────
+    function buildProgress(count) {
       progressEl.innerHTML = '';
-      cards.forEach((_, i) => {
+      for (let i = 0; i < count; i++) {
         const pip = document.createElement('button');
-        pip.className = 'progress-pip' + (i === currentIndex ? ' active' : '');
+        pip.className = 'progress-pip' + (i === 0 ? ' active' : '');
         pip.setAttribute('aria-label', `Project ${i + 1}`);
-        pip.addEventListener('click', () => gotoCard(i, i > currentIndex));
+        pip.addEventListener('click', () => scrollToCardIndex(i));
         progressEl.appendChild(pip);
-      });
+      }
     }
 
-    function updatePips() {
-      progressEl.querySelectorAll('.progress-pip').forEach((p, i) => {
-        p.classList.toggle('active', i === currentIndex);
-      });
-    }
-
-    function gotoCard(index, isDown) {
-      const cards = getVisibleCards();
-      if (!cards[index]) return;
-
-      allowScroll = false;
-      scrollCooldown.restart(true);
-
-      const incoming = cards[index];
-      const outgoing = cards[currentIndex];
-
-      // Stack effect: outgoing card scales back and peeks at top
-      gsap.to(outgoing, {
-        scale: isDown ? 0.95 : 1,
-        yPercent: isDown ? -3 : 100,
-        opacity: isDown ? 0.6 : 0,
-        duration: 0.75,
-        ease: 'power3.inOut',
-        onComplete: () => {
-          if (!isDown) gsap.set(outgoing, { yPercent: 100, scale: 1, opacity: 1 });
-        }
-      });
-
-      // Incoming card slides up from bottom with a bounce
-      gsap.fromTo(incoming,
-        { yPercent: isDown ? 100 : -5, scale: isDown ? 1 : 0.95, opacity: isDown ? 1 : 0.6 },
-        {
-          yPercent: 0,
-          scale: 1,
-          opacity: 1,
-          duration: 0.75,
-          ease: 'back.out(1.4)',
-        }
+    // Update pip highlight based on scroll position
+    snapContainer.addEventListener('scroll', () => {
+      const filter = document.querySelector('.toggle-btn.active').dataset.filter;
+      const visible = gsap.utils.toArray('.work-card-wrapper').filter(
+        w => w.dataset.category === filter && w.style.display !== 'none'
       );
+      const pips = progressEl.querySelectorAll('.progress-pip');
+      // Use viewport-relative position — whichever card's top is nearest the 40% mark is "active"
+      const focusY = snapContainer.clientHeight * 0.4;
 
-      incoming.classList.add('is-active');
-      outgoing.classList.remove('is-active');
-      currentIndex = index;
-      updatePips();
-    }
-
-    function applyFilter(filter) {
-      currentIndex = 0;
-      allowScroll = true;
-
-      gsap.utils.toArray('.work-card', track).forEach(card => {
-        card.classList.remove('is-active', 'hidden');
-        if (card.dataset.category !== filter) {
-          card.classList.add('hidden');
-          gsap.set(card, { yPercent: 100, scale: 1, opacity: 1 });
-        }
+      let closestIndex = 0;
+      let closestDist = Infinity;
+      visible.forEach((w, i) => {
+        const rect = w.getBoundingClientRect();
+        const containerRect = snapContainer.getBoundingClientRect();
+        const relTop = rect.top - containerRect.top;
+        const dist = Math.abs(relTop - focusY);
+        if (dist < closestDist) { closestDist = dist; closestIndex = i; }
       });
 
-      const cards = getVisibleCards();
-      cards.forEach((card, i) => {
-        if (i === 0) {
-          gsap.set(card, { yPercent: 0, scale: 1, opacity: 1 });
-          card.classList.add('is-active');
-        } else {
-          gsap.set(card, { yPercent: 100, scale: 1, opacity: 1 });
-        }
-      });
+      pips.forEach((p, i) => p.classList.toggle('active', i === closestIndex));
+    }, { passive: true });
 
-      buildProgress(cards);
+    function scrollToCardIndex(index) {
+      const filter = document.querySelector('.toggle-btn.active').dataset.filter;
+      const visible = gsap.utils.toArray('.work-card-wrapper').filter(
+        w => w.dataset.category === filter && w.style.display !== 'none'
+      );
+      if (visible[index]) {
+        // getBoundingClientRect gives position relative to viewport;
+        // add current scrollTop to get the absolute position within snapContainer
+        const targetTop = visible[index].getBoundingClientRect().top
+          + snapContainer.scrollTop
+          - snapContainer.getBoundingClientRect().top;
+        snapContainer.scrollTo({
+          top: targetTop,
+          behavior: 'smooth'
+        });
+      }
     }
 
+    // ── TOGGLE FILTER ────────────────────────────────────
     toggleBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         toggleBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        applyFilter(btn.dataset.filter);
-        intentObserver.enable();
+        buildStackAnimation(btn.dataset.filter);
+        snapContainer.scrollTo({
+          top: document.getElementById('workSection').offsetTop,
+          behavior: 'smooth'
+        });
       });
     });
-
-    // ── OBSERVER (the GSAP-recommended pattern) ──────────
-    // Observer watches wheel+touch inside the work section.
-    // At first/last card it disables itself so the outer snap takes over.
-    const intentObserver = ScrollTrigger.observe({
-      target: track,
-      type: 'wheel,touch',
-      tolerance: 1,
-      preventDefault: true,
-      onEnable(self) {
-        allowScroll = true;
-      },
-      onDisable: () => { },
-      onUp: () => {
-        if (!allowScroll) return;
-        if (currentIndex === 0) {
-          intentObserver.disable();
-          return;
-        }
-        gotoCard(currentIndex - 1, false);
-      },
-      onDown: () => {
-        if (!allowScroll) return;
-        const cards = getVisibleCards();
-        if (currentIndex === cards.length - 1) {
-          intentObserver.disable();
-          return;
-        }
-        gotoCard(currentIndex + 1, true);
-      },
-    });
-    intentObserver.disable();
-
-    // ── SECTION DETECTION via snap container scroll ──────
-    // Instead of ScrollTrigger (which fights scroll-snap), we watch
-    // the snap container's scrollTop directly to know when we're in the work section.
-
-    function isInWork() {
-      const sh = snapContainer.clientHeight;
-      return Math.round(snapContainer.scrollTop / sh) === 1;
-    }
-
-    snapContainer.addEventListener('scroll', () => {
-      if (isInWork()) {
-        if (!intentObserver.isEnabled) intentObserver.enable();
-      } else {
-        if (intentObserver.isEnabled) intentObserver.disable();
-        // Re-entering from below (timeline → work): restore last-card state
-        const sh = snapContainer.clientHeight;
-        if (snapContainer.scrollTop < sh * 1.5 && snapContainer.scrollTop > sh * 0.5) return;
-        if (snapContainer.scrollTop > sh * 1.5 && !intentObserver.isEnabled) {
-          // coming from below — reset to last card so it's ready
-        }
-      }
-    }, { passive: true });
-
-    // ── KEYBOARD ─────────────────────────────────────────
-    window.addEventListener('keydown', (e) => {
-      if (!intentObserver.isEnabled) return;
-      const cards = getVisibleCards();
-      if (e.key === 'ArrowDown' && currentIndex < cards.length - 1) gotoCard(currentIndex + 1, true);
-      if (e.key === 'ArrowUp' && currentIndex > 0) gotoCard(currentIndex - 1, false);
-    });
-
-    // ── MOBILE NAV ───────────────────────────────────────
-    const mobileNav = document.getElementById('workMobileNav');
-    const wmnPrev = document.getElementById('wmnPrev');
-    const wmnNext = document.getElementById('wmnNext');
-
-    function updateMobileNav() {
-      const cards = getVisibleCards();
-      wmnPrev.disabled = currentIndex === 0;
-      wmnNext.disabled = currentIndex >= cards.length - 1;
-    }
-
-    wmnPrev.addEventListener('click', () => { if (currentIndex > 0) { gotoCard(currentIndex - 1, false); updateMobileNav(); } });
-    wmnNext.addEventListener('click', () => { if (currentIndex < getVisibleCards().length - 1) { gotoCard(currentIndex + 1, true); updateMobileNav(); } });
-
-    if (window.innerWidth <= 768) mobileNav.style.display = 'flex';
-    window.addEventListener('resize', () => {
-      mobileNav.style.display = window.innerWidth <= 768 ? 'flex' : 'none';
-    });
-
-    // Init
-    applyFilter('case-study');
 
     // ── TIMELINE REVEAL ──────────────────────────────────
     const tlItems = document.querySelectorAll('.tl-item');
@@ -573,6 +520,23 @@
         document.body.style.overflow = '';
       });
     });
+
+    // ── INIT ─────────────────────────────────────────────
+    buildStackAnimation('case-study');
+
+    // ── DOTS VISIBILITY ──────────────────────────────────
+    // Show progress dots only while the work section is scrolled into view.
+    // IntersectionObserver watches the work section against the snap container.
+    const workSection = document.getElementById('workSection');
+    const dotsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        progressEl.classList.toggle('is-visible', e.isIntersecting);
+      });
+    }, {
+      root: snapContainer,
+      threshold: 0.05  // show as soon as 5% of the section is visible
+    });
+    dotsObserver.observe(workSection);
   </script>
 </body>
 

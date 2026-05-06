@@ -34,11 +34,12 @@ body::before {
   background-size: 180px 180px;
 }
 
+/* ── SNAP CONTAINER ─────────────────────────────────── */
 .snap-container {
   position: fixed;
   inset: 0;
   overflow-y: scroll;
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: none;
   -webkit-overflow-scrolling: touch;
   z-index: 1;
 }
@@ -50,6 +51,7 @@ body::before {
   position: relative;
 }
 
+/* ── NAV ────────────────────────────────────────────── */
 nav {
   display: flex;
   align-items: center;
@@ -177,6 +179,7 @@ nav {
   transform: translateY(-6.5px) rotate(-45deg);
 }
 
+/* ── MOBILE MENU ────────────────────────────────────── */
 .mobile-menu {
   display: none;
   position: fixed;
@@ -252,7 +255,7 @@ nav {
   background-size: 180px 180px;
 }
 
-/* ── HERO ── */
+/* ── HERO ───────────────────────────────────────────── */
 .hero-section {
   display: flex;
   flex-direction: column;
@@ -376,21 +379,26 @@ nav {
   display: block;
 }
 
-/* ── WORK ── */
+/* ── WORK SECTION ───────────────────────────────────── */
+/* Tall scroll section — not a fixed-height snap panel  */
 .work-section {
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  height: auto;
   background: var(--cream);
-  padding-top: 97px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .work-subheader {
+  position: sticky;
+  top: 97px;
+  z-index: 50;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px 56px;
-  border-bottom: 1px solid var(--border);
+  background: transparent;
 }
 
 .work-eyebrow {
@@ -452,58 +460,48 @@ nav {
   line-height: 1;
 }
 
+/* ── WORK TRACK & CARD WRAPPERS ─────────────────────── */
+/* Centred column — cards stack inside here via GSAP pin  */
 .work-track {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 0 40px;
 }
 
-.work-track-inner {
-  position: relative;
-}
-
-.work-card {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 56px;
-  pointer-events: none;
+/* Each wrapper is the ScrollTrigger pin target */
+.work-card-wrapper {
+  width: 100%;
+  perspective: 1000px;
+  margin-bottom: 40px;
   will-change: transform;
 }
 
-.work-card:nth-child(1) {
-  z-index: 1;
+.work-card-wrapper:last-child {
+  margin-bottom: 0;
 }
 
-.work-card:nth-child(2) {
-  z-index: 2;
+.work-card-wrapper.hidden {
+  display: none;
 }
 
-.work-card:nth-child(3) {
-  z-index: 3;
-}
-
-.work-card:nth-child(4) {
-  z-index: 4;
+/* Cards sit in normal flow — GSAP owns transform/scale  */
+.work-card {
+  width: 100%;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .work-card.hidden {
   display: none;
 }
 
-.work-card.is-active {
-  pointer-events: all;
-}
-
 .work-card-body {
   width: 100%;
-  max-width: 1100px;
-  height: 70vh;
+  height: calc(100vh - 174px);
   background: var(--cream);
   border: 1px solid var(--border);
-  border-radius: 24px;
+  border-radius: 20px;
   display: grid;
   grid-template-columns: 1fr 1.4fr;
   overflow: hidden;
@@ -511,7 +509,7 @@ nav {
 }
 
 .work-info {
-  padding: 44px 40px;
+  padding: 40px 36px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -652,15 +650,26 @@ nav {
   opacity: 0.35;
 }
 
+/* ── PROGRESS PIPS ──────────────────────────────────── */
+/* Sticky inside work section — disappear outside it    */
 .work-progress {
-  position: absolute;
+  position: fixed;
   right: 28px;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   gap: 9px;
-  z-index: 10;
+  z-index: 100;
+  width: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.work-progress.is-visible {
+  opacity: 1;
+  pointer-events: all;
 }
 
 .progress-pip {
@@ -729,7 +738,6 @@ nav {
   flex-direction: column;
 }
 
-/* 3-column grid: years | title+company | description */
 .tl-item {
   display: grid;
   grid-template-columns: 148px 1fr 1.8fr;
@@ -757,7 +765,6 @@ nav {
   padding-left: 8px;
 }
 
-/* Col 1: years */
 .tl-years {
   font-family: 'Anton', sans-serif;
   font-size: 13px;
@@ -768,7 +775,6 @@ nav {
   white-space: nowrap;
 }
 
-/* Col 2: title + company stacked */
 .tl-role {
   display: flex;
   flex-direction: column;
@@ -791,7 +797,6 @@ nav {
   letter-spacing: 0.04em;
 }
 
-/* Col 3: description */
 .tl-desc {
   font-family: 'DM Mono', sans-serif;
   font-size: 13.5px;
@@ -863,6 +868,60 @@ nav {
 }
 
 /* ══════════════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════════════ */
+.site-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 56px;
+  border-top: 1px solid var(--border);
+}
+
+.footer-logo img {
+  height: 32px;
+  width: auto;
+  display: block;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.footer-logo:hover img {
+  opacity: 1;
+}
+
+.footer-made {
+  font-family: 'DM Mono', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.footer-links a {
+  color: var(--ink);
+  opacity: 0.35;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.footer-links a:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+/* ══════════════════════════════════════════════════════
    RESPONSIVE — TABLET
 ══════════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
@@ -879,12 +938,8 @@ nav {
     padding: 14px 36px;
   }
 
-  .work-card {
-    padding: 20px 36px;
-  }
-
   .work-card-body {
-    height: 72vh;
+    height: calc(100vh - 174px);
   }
 
   .work-info {
@@ -984,8 +1039,9 @@ nav {
     display: none;
   }
 
-  .work-section {
-    padding-top: 72px;
+  .work-track {
+    width: 100%;
+    padding: 16px 20px 60px;
   }
 
   .work-subheader {
@@ -993,29 +1049,6 @@ nav {
   }
 
   .work-eyebrow {
-    display: none;
-  }
-
-  .work-track {
-    overflow: hidden;
-    flex: none;
-  }
-
-  .work-card {
-    position: static;
-    height: auto;
-    transform: none !important;
-    opacity: 1 !important;
-    pointer-events: all !important;
-    padding: 16px 20px 32px;
-    display: none;
-  }
-
-  .work-card.is-active {
-    display: flex;
-  }
-
-  .work-card.hidden {
     display: none;
   }
 
@@ -1042,38 +1075,6 @@ nav {
     display: none;
   }
 
-  .work-mobile-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 24px;
-    padding: 16px 0 32px;
-  }
-
-  .wmn-btn {
-    font-family: 'Anton', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.16em;
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--ink);
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 4px;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
-  }
-
-  .wmn-btn:hover {
-    opacity: 1;
-  }
-
-  .wmn-btn:disabled {
-    opacity: 0.2;
-    cursor: default;
-  }
-
-  /* Timeline mobile */
   .timeline-section {
     align-items: flex-start;
     padding: calc(72px + 28px) 0 48px;
@@ -1101,8 +1102,23 @@ nav {
   .tl-desc {
     margin-top: 4px;
   }
+
+  .site-footer {
+    padding: 14px 24px;
+  }
+
+  .footer-made {
+    display: none;
+  }
+
+  .footer-links {
+    gap: 20px;
+  }
 }
 
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE — SMALL MOBILE
+══════════════════════════════════════════════════════ */
 @media (max-width: 400px) {
   nav {
     padding: 16px 20px;
@@ -1122,73 +1138,5 @@ nav {
 
   .hero-desc {
     font-size: 15px;
-  }
-}
-
-/* ══════════════════════════════════════════════════════
-   FOOTER — bottom bar inside timeline section
-══════════════════════════════════════════════════════ */
-.site-footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 56px;
-  border-top: 1px solid var(--border);
-}
-
-.footer-logo img {
-  height: 32px;
-  width: auto;
-  display: block;
-  opacity: 0.6;
-  transition: opacity 0.2s ease;
-}
-
-.footer-logo:hover img {
-  opacity: 1;
-}
-
-.footer-made {
-  font-family: 'DM Mono', sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  color: var(--muted);
-}
-
-.footer-links {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-}
-
-.footer-links a {
-  color: var(--ink);
-  opacity: 0.35;
-  display: flex;
-  align-items: center;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.footer-links a:hover {
-  opacity: 1;
-  transform: translateY(-2px);
-}
-
-@media (max-width: 768px) {
-  .site-footer {
-    padding: 14px 24px;
-  }
-
-  .footer-made {
-    display: none;
-  }
-
-  .footer-links {
-    gap: 20px;
   }
 }
