@@ -128,7 +128,7 @@
               </div>
               <div class="work-visual">
                 <div class="work-img-placeholder">
-                  <img src="assets/fundraiseathon.png" alt="fundraise-a-thon cover" />
+                  <img src="assets/fundraiseathon2.png" alt="fundraise-a-thon cover" />
                 </div>
               </div>
             </div>
@@ -341,8 +341,17 @@
     }, { passive: true });
 
     heroScrollHint.addEventListener('click', () => {
-      document.getElementById('workSection').scrollIntoView({ behavior: 'smooth' });
-    });
+        const workSection = document.getElementById('workSection');
+        const nav = document.querySelector('nav');
+
+        const navHeight = nav.offsetHeight;
+        const targetY = workSection.offsetTop - navHeight;
+
+        window.scrollTo({
+          top: targetY,
+          behavior: 'smooth'
+        });
+      });
 
     // ── STACKING CARD ANIMATION ──────────────────────────
     let activeScrollTriggers = [];
@@ -350,70 +359,84 @@
     let visibleWrappers = [];      // track currently-visible wrappers
 
     function buildStackAnimation(filter) {
-      activeScrollTriggers.forEach(st => st.kill());
-      activeScrollTriggers = [];
-      pinTriggers = [];
+        activeScrollTriggers.forEach(st => st.kill());
+        activeScrollTriggers = [];
+        pinTriggers = [];
 
-      gsap.utils.toArray('.work-card-wrapper').forEach(wrapper => {
-        gsap.set(wrapper.querySelector('.work-card'), { clearProps: 'all' });
-        wrapper.style.display = '';
-      });
-
-      const allWrappers = gsap.utils.toArray('.work-card-wrapper');
-      visibleWrappers = allWrappers.filter(w => w.dataset.category === filter);
-      const hidden = allWrappers.filter(w => w.dataset.category !== filter);
-      hidden.forEach(w => { w.style.display = 'none'; });
-
-      buildProgress(visibleWrappers.length);
-
-      const PIN_TOP = 154;
-
-      visibleWrappers.forEach((wrapper, i) => {
-        const card = wrapper.querySelector('.work-card');
-        const isLast = i === visibleWrappers.length - 1;
-
-        // PIN trigger — keeps the card stuck while track scrolls past
-        // Bigger end buffer for the LAST card so it doesn't get cut off
-        const endOffset = isLast ? 400 : (PIN_TOP + 14 * i + 250);
-
-        const pinST = ScrollTrigger.create({
-          trigger: wrapper,
-          start: 'top ' + (PIN_TOP + 14 * i),
-          endTrigger: '.work-track',
-          end: 'bottom ' + endOffset,
-          pin: true,
-          pinSpacing: false,
-          anticipatePin: 1,
-          // onToggle/onUpdate: drive the pip indicator directly
-          onToggle: (self) => updateActivePip(),
-          onUpdate: () => updateActivePip(),
+        gsap.utils.toArray('.work-card-wrapper').forEach(wrapper => {
+          gsap.set(wrapper.querySelector('.work-card'), { clearProps: 'all' });
+          wrapper.style.display = '';
         });
-        activeScrollTriggers.push(pinST);
-        pinTriggers.push(pinST);
 
-        // ANIMATION trigger — non-last cards scale/lift as next card arrives
-        if (!isLast) {
-          const nextWrapper = visibleWrappers[i + 1];
+        const allWrappers = gsap.utils.toArray('.work-card-wrapper');
+        visibleWrappers = allWrappers.filter(w => w.dataset.category === filter);
+        const hidden = allWrappers.filter(w => w.dataset.category !== filter);
 
-          const animST = ScrollTrigger.create({
-            trigger: nextWrapper,
-            start: 'top bottom',
-            end: 'top ' + (PIN_TOP + 14 * (i + 1)),
-            scrub: 0.8,
-            animation: gsap.to(card, {
-              scale: 0.92 + 0.02 * i,
-              y: -8,
-              transformOrigin: 'top center',
-              ease: 'none',
-            }),
+        hidden.forEach(w => {
+          w.style.display = 'none';
+        });
+
+        buildProgress(visibleWrappers.length);
+
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        const PIN_TOP = isMobile ? 125 : 154;
+        const SCALE_AMOUNT = isMobile ? 0.96 : 0.92;
+        const Y_AMOUNT = isMobile ? -6 : -8;
+
+        visibleWrappers.forEach((wrapper, i) => {
+          const card = wrapper.querySelector('.work-card');
+          const isLast = i === visibleWrappers.length - 1;
+
+          const endOffset = PIN_TOP + 14 * i + 250;
+
+          const pinST = ScrollTrigger.create({
+            trigger: wrapper,
+            start: 'top ' + (PIN_TOP + 14 * i),
+            endTrigger: '.work-track',
+            end: 'bottom ' + endOffset,
+            pin: true,
+            pinSpacing: false,
+            anticipatePin: 1,
+            onToggle: () => updateActivePip(),
+            onUpdate: () => updateActivePip(),
           });
-          activeScrollTriggers.push(animST);
-        }
-      });
 
-      ScrollTrigger.refresh();
-      updateActivePip();
-    }
+          activeScrollTriggers.push(pinST);
+          pinTriggers.push(pinST);
+
+          if (!isLast) {
+            const nextWrapper = visibleWrappers[i + 1];
+
+            const animST = ScrollTrigger.create({
+              trigger: nextWrapper,
+              start: 'top bottom',
+              end: 'top ' + (PIN_TOP + 14 * (i + 1)),
+              scrub: 0.8,
+              animation: gsap.to(card, {
+                scale: SCALE_AMOUNT + 0.01 * i,
+                y: Y_AMOUNT,
+                transformOrigin: 'top center',
+                ease: 'none',
+              }),
+            });
+
+            activeScrollTriggers.push(animST);
+          }
+        });
+
+        ScrollTrigger.refresh();
+        updateActivePip();
+      }
+      let resizeTimer;
+
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimer);
+
+          resizeTimer = setTimeout(() => {
+            const activeFilter = document.querySelector('.toggle-btn.active')?.dataset.filter || 'case-study';
+            buildStackAnimation(activeFilter);
+          }, 200);
+        });
 
     // ── PROGRESS PIPS ────────────────────────────────────
     function buildProgress(count) {
