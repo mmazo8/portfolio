@@ -16,11 +16,12 @@
 
 html,
 body {
-  height: 100%;
+  height: auto;
+  min-height: 100%;
   font-family: 'DM Mono', sans-serif;
   background: var(--cream);
   color: var(--ink);
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 body::before {
@@ -30,23 +31,18 @@ body::before {
   z-index: 0;
   pointer-events: none;
   opacity: 0.055;
+  will-change: opacity;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   background-size: 180px 180px;
 }
 
-/* ── SNAP CONTAINER ─────────────────────────────────── */
+/* ── PAGE CONTAINER ─────────────────────────────────── */
 .snap-container {
-  position: fixed;
-  inset: 0;
-  overflow-y: scroll;
-  scroll-snap-type: none;
-  -webkit-overflow-scrolling: touch;
+  position: relative;
   z-index: 1;
 }
 
 .snap-section {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   height: 100vh;
   position: relative;
 }
@@ -380,12 +376,11 @@ nav {
 }
 
 /* ── WORK SECTION ───────────────────────────────────── */
-/* Tall scroll section — not a fixed-height snap panel  */
 .work-section {
   position: relative;
   height: auto;
   background: var(--cream);
-  padding-top: 0;
+  padding-top: 1px;
   padding-bottom: 0;
 }
 
@@ -461,20 +456,29 @@ nav {
 }
 
 /* ── WORK TRACK & CARD WRAPPERS ─────────────────────── */
-/* Centred column — cards stack inside here via GSAP pin  */
 .work-track {
   width: 90%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 24px 0 40px;
+  /* Bottom padding gives the LAST card breathing room before timeline */
+  padding: 24px 0 60vh;
 }
 
-/* Each wrapper is the ScrollTrigger pin target */
+/*
+  CRITICAL: pinned card wrappers must NOT capture wheel/scroll events.
+  When ScrollTrigger pins a wrapper, it becomes position: fixed and
+  covers a large area. Without pointer-events: none here, the topmost
+  pinned wrapper would intercept all scroll attempts in its area.
+*/
 .work-card-wrapper {
   width: 100%;
-  perspective: 1000px;
-  margin-bottom: 40px;
-  will-change: transform;
+  margin-bottom: 60vh;
+  pointer-events: none;
+}
+
+/* Re-enable pointer events on the actual card body so links/buttons work */
+.work-card-body {
+  pointer-events: auto;
 }
 
 .work-card-wrapper:last-child {
@@ -485,11 +489,11 @@ nav {
   display: none;
 }
 
-/* Cards sit in normal flow — GSAP owns transform/scale  */
 .work-card {
   width: 100%;
   will-change: transform;
   transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .work-card.hidden {
@@ -498,7 +502,8 @@ nav {
 
 .work-card-body {
   width: 100%;
-  height: calc(100vh - 174px);
+  height: 75vh;
+  max-height: 720px;
   background: var(--cream);
   border: 1px solid var(--border);
   border-radius: 20px;
@@ -651,7 +656,6 @@ nav {
 }
 
 /* ── PROGRESS PIPS ──────────────────────────────────── */
-/* Sticky inside work section — disappear outside it    */
 .work-progress {
   position: fixed;
   right: 28px;
@@ -938,10 +942,6 @@ nav {
     padding: 14px 36px;
   }
 
-  .work-card-body {
-    height: calc(100vh - 174px);
-  }
-
   .work-info {
     padding: 36px 32px;
   }
@@ -970,17 +970,15 @@ nav {
     overflow: auto;
   }
 
-  .snap-container {
-    position: static;
-    overflow-y: auto;
-    scroll-snap-type: none;
+  /* On mobile, kill the stacking effect: cards flow naturally */
+  .work-card-wrapper {
+    pointer-events: auto;
+    margin-bottom: 24px;
   }
 
   .snap-section {
     height: auto;
     min-height: 100svh;
-    scroll-snap-align: none;
-    scroll-snap-stop: unset;
   }
 
   nav {

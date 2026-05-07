@@ -14,7 +14,8 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap"
     rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -119,7 +120,8 @@
                   </div>
                   <div class="work-meta-row">
                     <span class="meta-label">Scope</span>
-                    <span class="meta-value meta-bold">Product Strategy, UX/UI,<br>Prototyping, User Testing,<br>Design Systems</span>
+                    <span class="meta-value meta-bold">Product Strategy, UX/UI,<br>Prototyping, User Testing,<br>Design
+                      Systems</span>
                   </div>
                 </div>
                 <a href="#" class="work-cta"><span>View Case Study</span> →</a>
@@ -327,14 +329,13 @@
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
-    const snapContainer = document.getElementById('snapContainer');
     const heroScrollHint = document.getElementById('heroScrollHint');
     const progressEl = document.getElementById('workProgress');
     const toggleBtns = document.querySelectorAll('.toggle-btn');
 
     // ── HERO SCROLL HINT ─────────────────────────────────
-    snapContainer.addEventListener('scroll', () => {
-      const past = snapContainer.scrollTop > snapContainer.clientHeight * 0.4;
+    window.addEventListener('scroll', () => {
+      const past = window.scrollY > window.innerHeight * 0.4;
       heroScrollHint.style.opacity = past ? '0' : '1';
       heroScrollHint.style.pointerEvents = past ? 'none' : 'all';
     }, { passive: true });
@@ -344,85 +345,74 @@
     });
 
     // ── STACKING CARD ANIMATION ──────────────────────────
-    // Direct port of the reference pattern:
-    //   • Each .work-card-wrapper is pinned with pinSpacing: false
-    //   • As you scroll past it, the card scrubs to a scaled + rotated state
-    //   • The last visible card stays flat (scale 1, rotationX 0)
-    //   • All ScrollTriggers use snapContainer as the scroller
-
     let activeScrollTriggers = [];
+    let pinTriggers = [];          // track pin triggers for pip logic
+    let visibleWrappers = [];      // track currently-visible wrappers
 
     function buildStackAnimation(filter) {
-      // Kill existing triggers and reset card transforms
       activeScrollTriggers.forEach(st => st.kill());
       activeScrollTriggers = [];
-      ScrollTrigger.refresh();
+      pinTriggers = [];
 
       gsap.utils.toArray('.work-card-wrapper').forEach(wrapper => {
         gsap.set(wrapper.querySelector('.work-card'), { clearProps: 'all' });
         wrapper.style.display = '';
       });
 
-      // Split into visible/hidden by filter
       const allWrappers = gsap.utils.toArray('.work-card-wrapper');
-      const visible = allWrappers.filter(w => w.dataset.category === filter);
-      const hidden  = allWrappers.filter(w => w.dataset.category !== filter);
+      visibleWrappers = allWrappers.filter(w => w.dataset.category === filter);
+      const hidden = allWrappers.filter(w => w.dataset.category !== filter);
       hidden.forEach(w => { w.style.display = 'none'; });
 
-      buildProgress(visible.length);
+      buildProgress(visibleWrappers.length);
 
-      // Nav (97px) + subheader (~57px) = 154px of fixed chrome at the top
       const PIN_TOP = 154;
 
-      visible.forEach((wrapper, i) => {
+      visibleWrappers.forEach((wrapper, i) => {
         const card = wrapper.querySelector('.work-card');
-        const isLast = i === visible.length - 1;
+        const isLast = i === visibleWrappers.length - 1;
 
-        if (isLast) {
-          // Last card: pinned with pinSpacing true so it creates real scroll
-          // distance — page scrolls naturally past it into the next section.
-          const st = ScrollTrigger.create({
-            trigger: wrapper,
-            start: 'top ' + (PIN_TOP + 10 * i),
-            end: '+=600',
-            scrub: 0.5,
-            pin: wrapper,
-            pinSpacing: true,
-            scroller: snapContainer,
-          });
-          activeScrollTriggers.push(st);
-          return;
-        }
+        // PIN trigger — keeps the card stuck while track scrolls past
+        // Bigger end buffer for the LAST card so it doesn't get cut off
+        const endOffset = isLast ? 400 : (PIN_TOP + 14 * i + 250);
 
-        // Non-last cards: animate to their buried state, then stay there.
-        // We do this in two steps:
-        // 1. A short ScrollTrigger runs the scale/tilt animation
-        // 2. onLeave freezes the final transform so the card never moves again
-        const anim = gsap.to(card, {
-          scale: 0.9 + 0.025 * i,
-          rotationX: -10,
-          transformOrigin: 'top center',
-          ease: 'none',
-          paused: true,
-        });
-
-        const st = ScrollTrigger.create({
+        const pinST = ScrollTrigger.create({
           trigger: wrapper,
-          start: 'top ' + (PIN_TOP + 10 * i),
-          end: 'bottom 550',
+          start: 'top ' + (PIN_TOP + 14 * i),
           endTrigger: '.work-track',
-          scrub: 0.5,
-          pin: wrapper,
+          end: 'bottom ' + endOffset,
+          pin: true,
           pinSpacing: false,
-          scroller: snapContainer,
-          animation: anim,
-          // Once the card is fully buried, lock it at progress=1 forever
-          onLeave: () => anim.progress(1).pause(),
-          onLeaveBack: () => anim.play(),
+          anticipatePin: 1,
+          // onToggle/onUpdate: drive the pip indicator directly
+          onToggle: (self) => updateActivePip(),
+          onUpdate: () => updateActivePip(),
         });
+        activeScrollTriggers.push(pinST);
+        pinTriggers.push(pinST);
 
-        activeScrollTriggers.push(st);
+        // ANIMATION trigger — non-last cards scale/lift as next card arrives
+        if (!isLast) {
+          const nextWrapper = visibleWrappers[i + 1];
+
+          const animST = ScrollTrigger.create({
+            trigger: nextWrapper,
+            start: 'top bottom',
+            end: 'top ' + (PIN_TOP + 14 * (i + 1)),
+            scrub: 0.8,
+            animation: gsap.to(card, {
+              scale: 0.92 + 0.02 * i,
+              y: -8,
+              transformOrigin: 'top center',
+              ease: 'none',
+            }),
+          });
+          activeScrollTriggers.push(animST);
+        }
       });
+
+      ScrollTrigger.refresh();
+      updateActivePip();
     }
 
     // ── PROGRESS PIPS ────────────────────────────────────
@@ -437,46 +427,46 @@
       }
     }
 
-    // Update pip highlight based on scroll position
-    snapContainer.addEventListener('scroll', () => {
-      const filter = document.querySelector('.toggle-btn.active').dataset.filter;
-      const visible = gsap.utils.toArray('.work-card-wrapper').filter(
-        w => w.dataset.category === filter && w.style.display !== 'none'
-      );
+    // Active pip = highest-index pin trigger that has been entered (isActive)
+    // Falls back to checking which pin's start is closest above current scroll
+    function updateActivePip() {
       const pips = progressEl.querySelectorAll('.progress-pip');
-      // Use viewport-relative position — whichever card's top is nearest the 40% mark is "active"
-      const focusY = snapContainer.clientHeight * 0.4;
+      if (!pips.length || !pinTriggers.length) return;
 
-      let closestIndex = 0;
-      let closestDist = Infinity;
-      visible.forEach((w, i) => {
-        const rect = w.getBoundingClientRect();
-        const containerRect = snapContainer.getBoundingClientRect();
-        const relTop = rect.top - containerRect.top;
-        const dist = Math.abs(relTop - focusY);
-        if (dist < closestDist) { closestDist = dist; closestIndex = i; }
-      });
+      let activeIndex = 0;
+      const scrollY = window.scrollY;
 
-      pips.forEach((p, i) => p.classList.toggle('active', i === closestIndex));
-    }, { passive: true });
+      // Walk pins; the highest-index pin whose start <= scrollY is "active"
+      for (let i = 0; i < pinTriggers.length; i++) {
+        const st = pinTriggers[i];
+        if (st && typeof st.start === 'number' && scrollY >= st.start - 50) {
+          activeIndex = i;
+        }
+      }
+
+      pips.forEach((p, i) => p.classList.toggle('active', i === activeIndex));
+    }
 
     function scrollToCardIndex(index) {
-      const filter = document.querySelector('.toggle-btn.active').dataset.filter;
-      const visible = gsap.utils.toArray('.work-card-wrapper').filter(
-        w => w.dataset.category === filter && w.style.display !== 'none'
-      );
-      if (visible[index]) {
-        // getBoundingClientRect gives position relative to viewport;
-        // add current scrollTop to get the absolute position within snapContainer
-        const targetTop = visible[index].getBoundingClientRect().top
-          + snapContainer.scrollTop
-          - snapContainer.getBoundingClientRect().top;
-        snapContainer.scrollTo({
-          top: targetTop,
+      const st = pinTriggers[index];
+      if (st && typeof st.start === 'number') {
+        window.scrollTo({
+          top: st.start,
           behavior: 'smooth'
         });
       }
     }
+
+    // Also update on scroll as a safety net
+    let pipTickQueued = false;
+    window.addEventListener('scroll', () => {
+      if (pipTickQueued) return;
+      pipTickQueued = true;
+      requestAnimationFrame(() => {
+        pipTickQueued = false;
+        updateActivePip();
+      });
+    }, { passive: true });
 
     // ── TOGGLE FILTER ────────────────────────────────────
     toggleBtns.forEach(btn => {
@@ -484,7 +474,7 @@
         toggleBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         buildStackAnimation(btn.dataset.filter);
-        snapContainer.scrollTo({
+        window.scrollTo({
           top: document.getElementById('workSection').offsetTop,
           behavior: 'smooth'
         });
@@ -500,7 +490,7 @@
           tlObserver.unobserve(e.target);
         }
       });
-    }, { threshold: 0.1, root: snapContainer });
+    }, { threshold: 0.1 });
     tlItems.forEach(el => tlObserver.observe(el));
 
     // ── HAMBURGER ────────────────────────────────────────
@@ -522,19 +512,19 @@
     });
 
     // ── INIT ─────────────────────────────────────────────
-    buildStackAnimation('case-study');
+    // Wait for fonts + images to settle so ScrollTrigger calcs are correct
+    window.addEventListener('load', () => {
+      buildStackAnimation('case-study');
+    });
 
     // ── DOTS VISIBILITY ──────────────────────────────────
-    // Show progress dots only while the work section is scrolled into view.
-    // IntersectionObserver watches the work section against the snap container.
     const workSection = document.getElementById('workSection');
     const dotsObserver = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         progressEl.classList.toggle('is-visible', e.isIntersecting);
       });
     }, {
-      root: snapContainer,
-      threshold: 0.05  // show as soon as 5% of the section is visible
+      threshold: 0.05
     });
     dotsObserver.observe(workSection);
   </script>
