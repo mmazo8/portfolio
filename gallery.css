@@ -5,7 +5,8 @@
 ══════════════════════════════════════════════════════ */
 
 body.gallery-page {
-  overflow-y: auto;           /* page scrolls normally */
+  overflow-y: auto;
+  /* page scrolls normally */
   overflow-x: hidden;
   background: var(--cream);
 }
@@ -53,11 +54,15 @@ body.gallery-page nav {
 }
 
 @media (max-width: 900px) {
-  .gallery-grid { columns: 2; }
+  .gallery-grid {
+    columns: 2;
+  }
 }
 
 @media (max-width: 540px) {
-  .gallery-grid { columns: 1; }
+  .gallery-grid {
+    columns: 1;
+  }
 }
 
 .gallery-item {
@@ -102,12 +107,9 @@ body.gallery-page nav {
   transition: background 0.3s ease;
 }
 
+/* Zoom icon hidden — overlay tint only on hover */
 .gallery-zoom-icon {
-  font-size: 32px;
-  color: var(--cream);
-  opacity: 0;
-  transform: scale(0.8);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  display: none;
 }
 
 .gallery-item:hover .gallery-item-overlay {
@@ -116,11 +118,6 @@ body.gallery-page nav {
 
 .gallery-item:hover img {
   transform: scale(1.04);
-}
-
-.gallery-item:hover .gallery-zoom-icon {
-  opacity: 1;
-  transform: scale(1);
 }
 
 /* ── EMPTY STATE ─────────────────────────────────────── */
@@ -167,6 +164,8 @@ body.gallery-page nav {
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Reserve room on the sides so arrows never overlap the image */
+  padding: 24px 96px;
 
   /* Hidden by default */
   opacity: 0;
@@ -179,17 +178,17 @@ body.gallery-page nav {
   pointer-events: all;
 }
 
-/* Image container */
+/* Image container — sized against the padded lightbox */
 .lightbox-inner {
-  max-width: 90vw;
-  max-height: 88vh;
+  max-width: 100%;
+  max-height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .lightbox-img {
-  max-width: 90vw;
+  max-width: 100%;
   max-height: 85vh;
   object-fit: contain;
   border-radius: 12px;
@@ -226,7 +225,7 @@ body.gallery-page nav {
   background: rgba(246, 244, 239, 0.1);
 }
 
-/* Prev / Next */
+/* Prev / Next — pinned to the padded edges, symmetric */
 .lightbox-prev,
 .lightbox-next {
   position: absolute;
@@ -248,8 +247,13 @@ body.gallery-page nav {
   padding: 0;
 }
 
-.lightbox-prev { left: 24px; }
-.lightbox-next { right: 24px; }
+.lightbox-prev {
+  left: 24px;
+}
+
+.lightbox-next {
+  right: 24px;
+}
 
 .lightbox-prev:hover {
   background: rgba(246, 244, 239, 0.22);
@@ -281,8 +285,17 @@ body.gallery-page nav {
     padding: 100px 24px 60px;
   }
 
-  .lightbox-prev { left: 12px; }
-  .lightbox-next { right: 12px; }
+  .lightbox {
+    padding: 16px 64px;
+  }
+
+  .lightbox-prev {
+    left: 12px;
+  }
+
+  .lightbox-next {
+    right: 12px;
+  }
 
   .lightbox-prev,
   .lightbox-next {
@@ -295,5 +308,17 @@ body.gallery-page nav {
 @media (max-width: 480px) {
   .gallery-wrap {
     padding: 88px 16px 48px;
+  }
+
+  .lightbox {
+    padding: 12px 52px;
+  }
+
+  .lightbox-prev {
+    left: 8px;
+  }
+
+  .lightbox-next {
+    right: 8px;
   }
 }
